@@ -1,11 +1,11 @@
 import { z } from "zod";
-
+import { eq } from 'drizzle-orm';
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { posts } from "@/server/db/schema";
+import { indicator, posts } from "@/server/db/schema";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -28,13 +28,23 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.posts.findFirst({
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-    });
+  getLatest: publicProcedure
+  .input(z.object({ name: z.string().min(1) }))
+  .query(({ input }) => {
+    return  db.select({
+      field1: indicator.name,
+    }).from(indicator).where(eq(indicator.group, inout));
+    
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
+  }),
+
+  getindicatorOfGroup: protectedProcedure
+  .input(z.object({ text: z.string() }))
+  .query(async ({ input  }) => {
+    return ctx.db.query.indicator.findMany({ where:  eq(indicator.group, input) });
+    
   }),
 });

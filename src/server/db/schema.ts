@@ -1,3 +1,4 @@
+import { create } from "domain";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
@@ -7,9 +8,13 @@ import {
   serial,
   text,
   timestamp,
+  doublePrecision,
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import {type InferSelectModel } from "drizzle-orm"
+import e from "cors";
+
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -41,6 +46,7 @@ export const posts = createTable(
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
+  role: varchar("role", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
@@ -114,3 +120,73 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const indicator = createTable("indicator", {
+	id: serial("id").primaryKey().notNull(),
+	name: varchar("name"),
+	group: varchar("group"),
+	description: varchar("description"),
+	inputs: varchar("inputs"),
+	outputs: varchar("outputs"),
+});
+
+export const assetData = createTable("asset_data", {
+	id: serial("id").primaryKey().notNull(),
+	timestamp: timestamp("timestamp", { mode: 'string' }),
+	assetName: varchar("asset_name"),
+	open: doublePrecision("open"),
+	high: doublePrecision("high"),
+	low: doublePrecision("low"),
+	close: doublePrecision("close"),
+	volume: doublePrecision("volume"),
+	timeframe: varchar("timeframe", { length: 10 }),
+	exchange: varchar("exchange", { length: 16 }),
+});
+
+export const strategies = createTable("strategies", {
+	id: serial("id").primaryKey().notNull(),
+	name: varchar("name"),
+	description: varchar("description"),
+});
+
+export const exitRules = createTable("exit_rules", {
+	id: serial("id").primaryKey().notNull(),
+	strategyId: integer("strategy_id").references(() => strategies.id),
+	ruleType: varchar("rule_type"),
+	indicatorId: integer("indicator_id").references(() => indicator.id),
+	// patternId: integer("pattern_id").references(() => patterns.id),
+	operator: varchar("operator"),
+	value: doublePrecision("value"),
+});
+
+
+export const entryRules = createTable("entry_rules", {
+	id: serial("id").primaryKey().notNull(),
+	strategyId: integer("strategy_id").references(() => strategies.id),
+	ruleType: varchar("rule_type"),
+	indicatorId: integer("indicator_id").references(() => indicator.id),
+	// patternId: integer("pattern_id").references(() => patterns.id),
+	operator: varchar("operator"),
+	value: doublePrecision("value"),
+});
+
+export const riskManagement = createTable("risk_management", {
+	id: serial("id").primaryKey().notNull(),
+	strategyId: integer("strategy_id").references(() => strategies.id),
+	maxDrawdown: doublePrecision("max_drawdown"),
+	stopLossType: varchar("stop_loss_type"),
+	stopLossValue: doublePrecision("stop_loss_value"),
+	stopLossRuleId: integer("stop_loss_rule_id"),
+});
+
+
+export type Strategy = InferSelectModel<typeof strategies>;
+export type ExitRule = InferSelectModel<typeof exitRules>;
+export type EntryRule = InferSelectModel<typeof entryRules>;
+export type RiskManagement = InferSelectModel<typeof riskManagement>;
+export type Indicator = InferSelectModel<typeof indicator>;
+export type AssetData = InferSelectModel<typeof assetData>;
+export type Account = InferSelectModel<typeof accounts>;
+export type Session = InferSelectModel<typeof sessions>;
+export type VerificationToken = InferSelectModel<typeof verificationTokens>;  
+export type User = InferSelectModel<typeof users>;
