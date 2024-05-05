@@ -49,3 +49,22 @@ export const getindicatorGroup = async () => {
     return { error: "error" };
   }
 };
+
+export const getindicatorDetails = async (selectedIndicator: string) => {
+    try {
+      console.log(
+        "this is inside the getindicatorDetails function passed the indicator value",
+        indicator,
+      );
+      const P1 =  db
+        .select()
+        .from(indicator)
+        .where(eq(indicator.name, sql.placeholder('selectedIndicator')));
+      const data = await P1.execute({ selectedIndicator: selectedIndicator });
+      if (data) return { data };
+      else return { data: null, error: "error" };
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: `Error` };
+    }
+  };

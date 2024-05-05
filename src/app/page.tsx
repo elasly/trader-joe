@@ -63,27 +63,19 @@ export default async function Home() {
     </main>
   );
 }
-let group = "cycle indicators";
 async function CrudShowcase() {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const latestPost =  api.post.getLatest();
-  const indicatorOfGroup =  api.post.getindicatorOfGroup(group);
+  const latestPost =   api.post.getLatest();
 
   return (
-    <div className="w-full max-w-xs">
-    <div className="w-full max-w-xs">
-      {indicatorOfGroup?.length > 0 ? (
-        <p className="truncate">indicators in group are: {indicatorOfGroup.map((i) => iزىشةث)}</p>
-      ) : (
-        <p>I did not find any indicators in the group .</p>
-      )}
-    </div>
+    
+    
 
     <div className="w-full max-w-xs">
       {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+        <p className="truncate">Your most recent post: {latestPost.title}</p>
         
       ) : (
         <p>You have no posts yet.</p>
@@ -91,6 +83,6 @@ async function CrudShowcase() {
 
       <CreatePost />
     </div>
-    </div>
+
   );
 }
