@@ -178,7 +178,7 @@ const IndicatorCard: React.FC<IndicatorCardProps> = ({ id, onIndicatorData }) =>
     <div className="flex flex-col gap-4" >
       <Card className="w-full max-w-xs" style={{ height: '350px' }}>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Indicator Card</CardTitle>
+          <CardTitle className="text-xl font-semibold">Indicator Card {id}</CardTitle>
           <CardDescription className="items-center justify-between text-sm text-gray-500">
             Select the Group containing your desired indicator.
           </CardDescription>
@@ -204,7 +204,7 @@ const IndicatorCard: React.FC<IndicatorCardProps> = ({ id, onIndicatorData }) =>
             </SelectTrigger>
             <SelectContent className="w-64">
               {indicators.map((indicatorObj) => (
-                <SelectItem key={indicatorObj.id} value={indicatorObj.name}>
+                <SelectItem key={`${id}-${indicatorObj.id}`} value={indicatorObj.name}>
                   {indicatorObj.name}
                 </SelectItem>
               ))}
@@ -220,7 +220,7 @@ const IndicatorCard: React.FC<IndicatorCardProps> = ({ id, onIndicatorData }) =>
                     {indicatorDetails.map((indicatorObj) => (
                       <button
                         className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-                        key={indicatorObj.id}
+                        key={`${id}-${indicatorObj.id}`}
                       >
                         {indicatorObj.description}
                       </button>
@@ -242,7 +242,7 @@ const IndicatorCard: React.FC<IndicatorCardProps> = ({ id, onIndicatorData }) =>
                 </div>
                 <div className="grid gap-2">
                   {indicatorDetails.map((indicatorObj) => (
-                    <div className="grid grid-cols-3 items-center gap-4" key={indicatorObj.id}>
+                    <div className="grid grid-cols-3 items-center gap-4" key={`${id}-${indicatorObj.id}`}>
                     {Object.entries(indicatorObj.inputsMap || {}).map(([key, value]) => (
                       <React.Fragment key={key}>
                         <Label htmlFor={key}>{key}</Label>

@@ -54,7 +54,7 @@ function IndicatorCard() {
   const onIndicatorChange = (val: string) => {
     if (val === "") {
     } else setIndicator(val);
-    console.log("indicator value changed to", val);
+    // console.log("indicator value changed to", val);
   };
 
   return (

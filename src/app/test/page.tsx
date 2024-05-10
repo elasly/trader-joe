@@ -1,18 +1,38 @@
 "use client"
 // src/app/test/page.tsx
-import React from 'react'
-import  IndicatorCard  from '@/components/indicatorcard'
-import IndicatorPicker from '@/components/indicatorPicker'
-import { useState } from 'react'
+import React, { useState } from 'react';
+import IndicatorCard from '@/components/indicatorcard';
+import StrategyRules from '@/components/strategy-rules';
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-function page() {
-    // const [selectedGroup, setSelectedGroup] = useState("");
-    // const [groups, setGroups] = useState([]);
-    // const [indicators, setIndicators] = useState([]);
-    // const [selectedIndicator, setSelectedIndicator] = useState("");
-    const [indicatorDetails, setIndicatorDetails] = useState([]);
+interface Rule {
+  ruleType: string;
+  ruleAction: string;
+  indicatorId: number;
+  operator: string;
+  value: number;
+  sequence: number;
+  logicalOperator: string;
+  compareTo: string;
+  compIndicatorId: number;
+  slope: string;
+  priceAction: string;
+}
 
-    const [selectedData, setSelectedData] = useState({});
+function Page() {
+  const [entryRules, setEntryRules] = useState<Rule[]>([]);
+  const [exitRules, setExitRules] = useState<Rule[]>([]);
+  const [selectedData, setSelectedData] = useState({});
+  const [numIndicators, setNumIndicators] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
+
+  const handleSubmit = (submittedEntryRules: Rule[], submittedExitRules: Rule[]) => {
+    setEntryRules(submittedEntryRules);
+    setExitRules(submittedExitRules);
+    // Perform further actions with the submitted rules, e.g., save to database
+  };
 
   const handleIndicatorData = (id, data) => {
     setSelectedData((prevData) => ({
@@ -29,7 +49,6 @@ function page() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(selectedData),
-        
       });
       console.log("selectedData", JSON.stringify(selectedData));
       if (response.ok) {
@@ -42,36 +61,51 @@ function page() {
     }
   };
 
+  const handleNumIndicatorsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNumIndicators(parseInt(e.target.value, 10));
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
     <main className='flex min-h-screen flex-col items-center bg-gradient-to-b from-[#02276dab] to-[#0b14c5] text-white'>
-        <div className='flex flex-col items-center gap-2'>
-      <h1 className='text-5xl font-extrabold tracking-tight sm:text-[5rem]'>
-        This is a  <span className='text-[hsl(123,91%,70%)]'>Testing</span> Page
-      </h1>
+      <div className='flex flex-col items-center gap-4 py-4'>
+        <h1 className='text-5xl font-extrabold tracking-tight sm:text-[5rem]'>
+          This is a <span className='text-[hsl(123,91%,70%)]'>Testing</span> Page
+        </h1>
       </div>
-      <div className='flex flex-col items-center gap-2 py-8'>
-      </div>
-      <div className='flex flex-col1-4 items-center gap-2 py-8'>
-        <IndicatorCard id="1" onIndicatorData={handleIndicatorData} />
-        <IndicatorCard id="2" onIndicatorData={handleIndicatorData}  />
-        <IndicatorCard id="3" onIndicatorData={handleIndicatorData} />
-        <IndicatorCard id="4" onIndicatorData={handleIndicatorData} />
-      </div>
-      <div className='flex flex-col1-4 items-center gap-2 py-8'>
-          {indicatorDetails?.map((indicator) => (
-            <div key={indicator.id}>
-              <h2 className='text-2xl font-semibold'>{indicator.name}</h2>
-              <p className='text-sm text-gray-500'>{indicator.description}</p>
-            </div>
-          ))}
-      </div>
-      <button onClick={sendDataToDatabase}>Send Data to Database</button>
-    </main>
-    
-    
-  )
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button>Select how many indicators you want to use</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Enter Number of Indicators</DialogTitle>
+          <DialogDescription>
+            Please specify the number of indicators you want to generate.
+          </DialogDescription>
+          <Input type="number" value={numIndicators} onChange={handleNumIndicatorsChange} />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={handleDialogClose}>Confirm</Button>
+            </DialogClose>
+            </DialogFooter>
+            </DialogContent>
+            </Dialog>
+            <div className='flex flex-wrap justify-center gap-4 py-8'>
+    {Array.from({ length: numIndicators }, (_, index) => (
+      <IndicatorCard key={index} id={`${index + 1}`} onIndicatorData={handleIndicatorData} />
+    ))}
+  </div>
+
+  <div className='flex items-center'>
+    <StrategyRules pageId={1} onSubmit={handleSubmit} indicatorData={selectedData}/>
+  </div>
+
+  <button onClick={sendDataToDatabase}>Send Data to Database</button>
+</main>
+);
 }
-
-
-export default page
+export default Page;

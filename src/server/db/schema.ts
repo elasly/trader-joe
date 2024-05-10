@@ -152,22 +152,34 @@ export const strategies = createTable("strategies", {
 export const exitRules = createTable("exit_rules", {
 	id: serial("id").primaryKey().notNull(),
 	strategyId: integer("strategy_id").references(() => strategies.id),
-	ruleType: varchar("rule_type"),
+	ruleType: varchar("rule_type"), // e.g., "buy", "sell"
 	indicatorId: integer("indicator_id").references(() => indicator.id),
 	// patternId: integer("pattern_id").references(() => patterns.id),
-	operator: varchar("operator"),
-	value: doublePrecision("value"),
+	operator: varchar("operator", { length: 10 }), // e.g., "greater", "less", "crossAbove", "crossBelow"
+  value: doublePrecision("value"), // threshold value for the rule
+  sequence: integer("sequence"), // order of rule execution
+  logicalOperator: varchar("logical_operator", { length: 3 }), // "AND" or "OR"
+  compareTo: varchar("compare_to", { length: 10 }), // e.g., "value", "slope", "price", "indicator"
+  compIndicatorId: integer("comp_indicator_id").references(() => indicator.id), // id of the indicator to compare to
+  slope:varchar("slope", { length: 10 }), // e.g., "positive", "negative", "neutral"
+  priceAction: varchar("price_action", { length: 10 }), // e.g., "Close", "Open"
 });
 
 
 export const entryRules = createTable("entry_rules", {
 	id: serial("id").primaryKey().notNull(),
 	strategyId: integer("strategy_id").references(() => strategies.id),
-	ruleType: varchar("rule_type"),
+	ruleType: varchar("rule_type"), // e.g., "buy", "sell"
 	indicatorId: integer("indicator_id").references(() => indicator.id),
 	// patternId: integer("pattern_id").references(() => patterns.id),
-	operator: varchar("operator"),
-	value: doublePrecision("value"),
+	operator: varchar("operator", { length: 10 }), // e.g., "greater", "less", "crossAbove", "crossBelow"
+  value: doublePrecision("value"), // threshold value for the rule
+  sequence: integer("sequence"), // order of rule execution
+  logicalOperator: varchar("logical_operator", { length: 3 }), // "AND" or "OR"
+  compareTo: varchar("compare_to", { length: 10 }), // e.g., "value", "slope", "price", "indicator"
+  compIndicatorId: integer("comp_indicator_id").references(() => indicator.id), // id of the indicator to compare to
+  slope:varchar("slope", { length: 10 }), // e.g., "positive", "negative", "neutral"
+  priceAction: varchar("price_action", { length: 10 }), // e.g., "Close", "Open"
 });
 
 export const riskManagement = createTable("risk_management", {
