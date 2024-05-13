@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
-import { getindicatorOfGroup , getindicatorGroup} from "@/lib/queries";
+import { getindicatorOfGroup , getindicatorGroup} from "@/server/db/queries";
 import { groupCollapsed } from "console";
 
 

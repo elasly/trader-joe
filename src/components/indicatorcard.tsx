@@ -1,7 +1,7 @@
 // src/components/indicatorcard.tsx
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { getindicatorOfGroup, getindicatorGroup, getindicatorDetails } from "@/lib/queries";
+import { getindicatorOfGroup, getindicatorGroup, getindicatorDetails } from "@/server/db/queries";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";

@@ -45,34 +45,10 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
 }) => {
   // console.log("indicatorData", indicatorData);
   const [entryRules, setEntryRules] = useState<Rule[]>([
-    {
-      ruleType: "entryRule",
-      ruleAction: "",
-      indicatorId: 0,
-      operator: "",
-      value: 0,
-      sequence: 0,
-      logicalOperator: "",
-      compareTo: "",
-      compIndicatorId: 0,
-      slope: "",
-      priceAction: "",
-    },
+    
   ]);
   const [exitRules, setExitRules] = useState<Rule[]>([
-    {
-      ruleType: "exitRule",
-      ruleAction: "",
-      indicatorId: 0,
-      operator: "",
-      value: 0,
-      sequence: 0,
-      logicalOperator: "",
-      compareTo: "",
-      compIndicatorId: 0,
-      slope: "",
-      priceAction: "",
-    },
+    
   ]);
   console.log("entryRules", entryRules);
   console.log("exitRules", exitRules);
@@ -91,7 +67,6 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
       const updatedEntryRules = [...prevEntryRules];
       updatedEntryRules[EntryIndex] = { ...updatedEntryRules[EntryIndex], [field]: value };
       updatedEntryRules[EntryIndex] = { ...updatedEntryRules[EntryIndex], 'ruleType': "entryRule" };
-      console.log("updatedRules", updatedEntryRules, " with index", EntryIndex);
       return updatedEntryRules;
     });
   };
@@ -111,12 +86,51 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
 
   const addEntryRule = () => {
     console.log("addEntryRule", entryRules);
-    setEntryRules((prevEntryRules) => [...prevEntryRules, {} as Rule]);
+    setEntryRules((prevEntryRules) => [
+      ...prevEntryRules,
+      {
+        ruleType: "entryRule",
+        ruleAction: "None",
+        indicatorId: 0,
+        operator: "",
+        value: 0,
+        sequence: 0,
+        logicalOperator: "",
+        compareTo: "",
+        compIndicatorId: 0,
+        slope: "",
+        priceAction: "",
+      },
+    ]);
+  };
+  
+  const addExitRule = () => {
+    setExitRules((prevExitRules) => [
+      ...prevExitRules,
+      {
+        ruleType: "exitRule",
+        ruleAction: "None",
+        indicatorId: 0,
+        operator: "",
+        value: 0,
+        sequence: 0,
+        logicalOperator: "",
+        compareTo: "",
+        compIndicatorId: 0,
+        slope: "",
+        priceAction: "",
+      },
+    ]);
   };
 
-  const addExitRule = () => {
-    setExitRules((prevExitRules) => [...prevExitRules, {} as Rule]);
-  };
+  // const addEntryRule = () => {
+  //   console.log("addEntryRule", entryRules);
+  //   setEntryRules((prevEntryRules) => [...prevEntryRules, {} as Rule]);
+  // };
+
+  // const addExitRule = () => {
+  //   setExitRules((prevExitRules) => [...prevExitRules, {} as Rule]);
+  // };
 
   const removeEntryRule = (EntryIndex: number) => {
     setEntryRules((prevRules) => {

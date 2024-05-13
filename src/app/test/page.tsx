@@ -6,6 +6,7 @@ import StrategyRules from '@/components/strategy-rules';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { putEntryRule, putExitRule, putStrategy, putRiskManagement } from '@/server/db/queries';
 
 interface Rule {
   ruleType: string;
@@ -20,6 +21,8 @@ interface Rule {
   slope: string;
   priceAction: string;
 }
+
+
 
 function Page() {
   const [entryRules, setEntryRules] = useState<Rule[]>([]);
@@ -43,15 +46,23 @@ function Page() {
 
   const sendDataToDatabase = async () => {
     try {
-      const response = await fetch('/api/saveData', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedData),
-      });
+      // console.log("entryRules", JSON.stringify(entryRules));
+      // console.log("exitRules", JSON.stringify(exitRules));
+      await putEntryRule(JSON.stringify(entryRules));
+      await putExitRule(JSON.stringify(exitRules));
+      // await putStrategy(strategy);
+      // await putRiskManagement(riskManagement);
+      // const response = await fetch('/api/saveData', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(selectedData),
+      // });
       console.log("selectedData", JSON.stringify(selectedData));
-      if (response.ok) {
+      if (0
+        // response.ok
+      ) {
         console.log('Data sent to the database successfully');
       } else {
         console.error('Error sending data to the database');

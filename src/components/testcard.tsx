@@ -20,7 +20,7 @@ import {
   SelectGroup,
   SelectValue,
 } from "@/components/ui/select";
-import { getindicatorOfGroup } from "@/lib/queries";
+import { getindicatorOfGroup } from "@/server/db/queries";
 
 function IndicatorCard() {
   const [IndGroup, setIndGroup] = useState("");
