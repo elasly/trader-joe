@@ -18,6 +18,8 @@
 /out/
 next-env.d.ts
 
+#database Dev
+./data
 # production
 /build
 
