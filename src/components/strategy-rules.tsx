@@ -50,8 +50,8 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
   const [exitRules, setExitRules] = useState<Rule[]>([
     
   ]);
-  console.log("entryRules", entryRules);
-  console.log("exitRules", exitRules);
+  // console.log("entryRules", entryRules);
+  // console.log("exitRules", exitRules);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

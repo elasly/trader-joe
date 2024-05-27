@@ -1,18 +1,20 @@
 //src/lib/queries.ts
-
+"use server";
 import  "server-only";
-import { entryRule, EntryRule, exitRules, ExitRule, indicator, strategies, riskManagement } from "@/server/db/schema";
+import { entryRules, exitRules, indicator, strategies, riskManagement, EntryRule, ExitRule, Indicator, } from "@/server/db/schema";
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { getServerAuthSession } from "@/server/auth"; 
-// import { EntryRule, ExitRule, Indicator, Strategy, RiskManagement } from "@/lib/interfaces";
+import { Strategy, RiskManagement } from "@/lib/interfaces";
+import { z } from 'zod';
 
 
 
-export const createIndicator = async (indicator: indicator) => {
+
+export const createIndicator = async (Indicator: Indicator) => {
   try {
     
-    const data = await db.insert(indicator).values(indicator);
+    const data = await db.insert(indicator).values(Indicator);
     return { data: null, error: null };
   } catch (error) {
     console.log(error);
@@ -72,12 +74,16 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
 
   export const putEntryRule = async (EntryRules: EntryRule[]) => {
     const session = await getServerAuthSession();
+    console.log(session)
+    console.log(EntryRules)
+    
     try {
       await Promise.all(
         EntryRules
-        .map(async (EntryRule: EntryRule) => {
-        const data = await db.insert(entryRule).values(EntryRule);
-        // console.log("data", data);
+        .map(async (entryRule: EntryRule) => {
+          console.log("data", entryRule.values);
+        const data = await db.insert(entryRules).values(entryRule);
+        
         })
       );
       return { data: null, error: null };
@@ -87,14 +93,13 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
     }
   };
 
-  export const putExitRule = async (exitRules: ExitRule[]) => {
+  export const putExitRule = async (ExitRules: ExitRule[]) => {
     // console.log("exitRules", exitRules);
     try {
       await Promise.all(
-        exitRules
-        .map(async (exitRule: ExitRule) => {
-          console.log("exitRule", exitRule);
-          await db.insert(exitRules).values(exitRulse);
+        ExitRules
+        .map(async (ExitRule: ExitRule) => {
+          await db.insert(exitRules).values(ExitRule);
         })
       );
       return { data: null, error: null };
@@ -107,7 +112,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
 
   export const putStrategy = async (strategy: Strategy) => {
     try {
-      const data = await db.insert(strategy).values(strategy);
+      const data = await db.insert(strategies).values(strategy);
       return { data: null, error: null };
     } catch (error) {
       console.log(error);
@@ -115,9 +120,9 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
     }
   };
 
-  export const putRiskManagement = async (riskManagement: RiskManagement) => {
+  export const putRiskManagement = async (RiskManagement: RiskManagement) => {
     try {
-      const data = await db.insert(riskManagement).values(riskManagement);
+      const data = await db.insert(riskManagement).values(RiskManagement);
       return { data: null, error: null };
     } catch (error) {
       console.log(error);

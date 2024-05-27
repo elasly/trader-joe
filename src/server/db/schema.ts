@@ -1,5 +1,5 @@
 import { create } from "domain";
-import { relations, sql } from "drizzle-orm";
+import { InferInsertModel, relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -12,8 +12,9 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-import {type InferSelectModel } from "drizzle-orm"
-import e from "cors";
+import {type InferSelectModel } from "drizzle-orm";
+import { z } from 'zod';
+
 
 
 /**
@@ -193,8 +194,8 @@ export const riskManagement = createTable("risk_management", {
 
 
 export type Strategy = InferSelectModel<typeof strategies>;
-export type ExitRule = InferSelectModel<typeof exitRules>;
-export type EntryRule = InferSelectModel<typeof entryRules>;
+export type ExitRule = InferInsertModel<typeof exitRules>;
+export type EntryRule = InferInsertModel<typeof entryRules>[];
 export type RiskManagement = InferSelectModel<typeof riskManagement>;
 export type Indicator = InferSelectModel<typeof indicator>;
 export type AssetData = InferSelectModel<typeof assetData>;
