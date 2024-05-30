@@ -17,23 +17,24 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { ExitRule, EntryRule } from "@/server/db/schema";
 
-interface Rule {
-  ruleType: string;
-  ruleAction: string;
-  indicatorId: number;
-  operator: string;
-  value: number;
-  sequence: number;
-  logicalOperator: string;
-  compareTo: string;
-  compIndicatorId: number;
-  slope: string;
-  priceAction: string;
-}
+// interface Rule {
+//   ruleType: string;
+//   ruleAction: string;
+//   indicatorId: number;
+//   operator: string;
+//   value: number;
+//   sequence: number;
+//   logicalOperator: string;
+//   compareTo: string;
+//   compIndicatorId: number;
+//   slope: string;
+//   priceAction: string;
+// }
 
 interface StrategyRulesProps {
-  onSubmit: (entryRules: Rule[], exitRules: Rule[]) => void;
+  onSubmit: (entryRules: EntryRule[], exitRules: ExitRule[]) => void;
   indicatorData: Record<string, any>;
   pageId: number;
 }
@@ -44,10 +45,10 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
   pageId,
 }) => {
   // console.log("indicatorData", indicatorData);
-  const [entryRules, setEntryRules] = useState<Rule[]>([
+  const [entry, setEntryRules] = useState<EntryRule[]>([
     
   ]);
-  const [exitRules, setExitRules] = useState<Rule[]>([
+  const [exitRules, setExitRules] = useState<ExitRule[]>([
     
   ]);
   // console.log("entryRules", entryRules);
@@ -55,18 +56,19 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(entryRules, exitRules);
+    onSubmit(entry, exitRules);
   };
 
   const handleEntryRuleChange = (
     EntryIndex: number,
-    field: keyof Rule,
-    value: number,
+    field: keyof EntryRule,
+    value: number | string,
   ) => {
     setEntryRules((prevEntryRules) => {
       const updatedEntryRules = [...prevEntryRules];
       updatedEntryRules[EntryIndex] = { ...updatedEntryRules[EntryIndex], [field]: value };
       updatedEntryRules[EntryIndex] = { ...updatedEntryRules[EntryIndex], 'ruleType': "entryRule" };
+      console.log("updatedEntryRules", updatedEntryRules);
       return updatedEntryRules;
     });
   };
@@ -80,45 +82,47 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
       const updatedExitRules = [...prevExitRules];
       updatedExitRules[exitIndex] = { ...updatedExitRules[exitIndex], [field]: value };
       updatedExitRules[exitIndex] = { ...updatedExitRules[exitIndex], 'ruleType': "exitRule" };
+      console.log("updatedExitRules", updatedExitRules);
       return updatedExitRules;
     });
   };
 
   const addEntryRule = () => {
-    console.log("addEntryRule", entryRules);
+    console.log("addEntryRule", entry);
     setEntryRules((prevEntryRules) => [
       ...prevEntryRules,
       {
         ruleType: "entryRule",
         ruleAction: "None",
         indicatorId: 0,
-        operator: "",
+        operator: "NA",
         value: 0,
         sequence: 0,
-        logicalOperator: "",
-        compareTo: "",
+        logicalOperator: "NA",
+        compareTo: "NA",
         compIndicatorId: 0,
-        slope: "",
-        priceAction: "",
+        slope: "NA",
+        priceAction: "NA",
       },
     ]);
   };
   
   const addExitRule = () => {
+    console.log("addExitRule", exitRules);
     setExitRules((prevExitRules) => [
       ...prevExitRules,
       {
         ruleType: "exitRule",
         ruleAction: "None",
         indicatorId: 0,
-        operator: "",
+        operator: "NA",
         value: 0,
         sequence: 0,
-        logicalOperator: "",
-        compareTo: "",
+        logicalOperator: "NA",
+        compareTo: "NA",
         compIndicatorId: 0,
-        slope: "",
-        priceAction: "",
+        slope: "NA",
+        priceAction: "NA",
       },
     ]);
   };
@@ -158,7 +162,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {entryRules.map((rule, EntryIndex) => (
+          {entry.map((rule, EntryIndex) => (
               <div key={EntryIndex} className="flex items-center gap-2">
                  <div>
                         <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "ruleAction", value)}>
@@ -184,7 +188,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                       data.details.map((indicator) => (
                         <SelectItem
                           key={`${pageId}-${id}-${indicator.id}`}
-                          value={`${id}-${indicator.id}`}
+                          value={`${indicator.id}`}
                         >
                           {`${indicator.name}-${id}`}
                         </SelectItem>
@@ -204,7 +208,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                 <SelectItem value="price">{"price"}</SelectItem>
               </SelectContent>
             </Select>
-            {entryRules[EntryIndex]?.compareTo === "indicator"  &&(
+            {entry[EntryIndex]?.compareTo === "indicator"  &&(
               <div>
               <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "operator", value)}>
               <SelectTrigger>
@@ -217,7 +221,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
             </Select>
             </div>
           )}
-          {entryRules[EntryIndex]?.compareTo === "indicator"  &&(
+          {entry[EntryIndex]?.compareTo === "indicator"  &&(
 
             <Select
             onValueChange={(value) =>
@@ -232,7 +236,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                 data.details.map((indicator) => (
                   <SelectItem
                     key={`${pageId}-${id}-${indicator.id}`}
-                    value={`${id}-${indicator.id}`}>
+                    value={`${indicator.id}`}>
                     {`${indicator.name}-${id}`}
                   </SelectItem>
                 )),
@@ -241,7 +245,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
           </Select>
           )}
 
-            {entryRules[EntryIndex]?.compareTo === "threshold"  &&(
+            {entry[EntryIndex]?.compareTo === "threshold"  &&(
               <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "operator", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Comparison" />
@@ -255,7 +259,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
               </SelectContent>
             </Select>
             )}
-            {entryRules[EntryIndex]?.compareTo === "threshold"  &&(
+            {entry[EntryIndex]?.compareTo === "threshold"  &&(
             
                 <Input
                   type="number"
@@ -269,7 +273,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                   }
                 />)}
 
-              {entryRules[EntryIndex]?.compareTo === "slope"  &&(
+              {entry[EntryIndex]?.compareTo === "slope"  &&(
               <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "slope", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Comparison" />
@@ -283,7 +287,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
               </SelectContent>
             </Select>
             )}
-            {entryRules[EntryIndex]?.compareTo === "price"  &&(
+            {entry[EntryIndex]?.compareTo === "price"  &&(
               <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "operator", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Comparison"/>
@@ -297,7 +301,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
               </SelectContent>
             </Select>
             )} 
-            {entryRules[EntryIndex]?.compareTo === "price"  &&(
+            {entry[EntryIndex]?.compareTo === "price"  &&(
               <Select onValueChange={(value) => handleEntryRuleChange(EntryIndex, "priceAction", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selct price action" />
@@ -362,7 +366,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                       data.details.map((indicator) => (
                         <SelectItem
                           key={`${pageId}-${id}-${indicator.id}`}
-                          value={`${id}-${indicator.id}`}>
+                          value={`${indicator.id}`}>
                           {`${indicator.name}-${id}`}
                         </SelectItem>
                       )),
@@ -409,7 +413,7 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
                 data.details.map((indicator) => (
                   <SelectItem
                     key={`${pageId}-${data.id}-${indicator.id}`}
-                    value={`${id}-${indicator.id}`}>
+                    value={`${indicator.id}`}>
                     {`${indicator.name}-${id}`}
                   </SelectItem>
                 )),

@@ -5,16 +5,28 @@ import { entryRules, exitRules, indicator, strategies, riskManagement, EntryRule
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { getServerAuthSession } from "@/server/auth"; 
-import { Strategy, RiskManagement } from "@/lib/interfaces";
+import { Strategy, RiskManagement, ExitRules } from "@/lib/interfaces";
 import { z } from 'zod';
 
 
-
+// interface Rule {
+//   ruleType: string;
+//   ruleAction: string;
+//   indicatorId: number;
+//   operator: string;
+//   value: number;
+//   sequence: number;
+//   logicalOperator: string;
+//   compareTo: string;
+//   compIndicatorId: number;
+//   slope: string;
+//   priceAction: string;
+// }
 
 export const createIndicator = async (Indicator: Indicator) => {
   try {
     
-    const data = await db.insert(indicator).values(Indicator);
+    await db.insert(indicator).values(Indicator);
     return { data: null, error: null };
   } catch (error) {
     console.log(error);
@@ -72,38 +84,49 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
     }
   };
 
-  export const putEntryRule = async (EntryRules: EntryRule[]) => {
-    const session = await getServerAuthSession();
-    console.log(session)
-    console.log(EntryRules)
-    
-    try {
-      await Promise.all(
-        EntryRules
-        .map(async (entryRule: EntryRule) => {
-          console.log("data", entryRule.values);
-        const data = await db.insert(entryRules).values(entryRule);
+  // export const putEntryRule = async (data: Rule[]) => {
+  //   const session = await getServerAuthSession();
+  //   console.log(session?.user.id)
+  //   console.log("entryRules", data);
+  //   try {
+  //     await Promise.all(
         
-        })
-      );
+  //        db.insert(entryRules).values(data));
+      
+    
+  //     return { data: null, error: null };
+  //   } catch (error) {
+  //     console.log("error from putEntryRule", error);
+  //     return { data: null, error: "Error" };
+  //   }
+  // };
+
+  export const putEntryRule = async (data: EntryRule[]) => {
+    const session = await getServerAuthSession();
+    console.log(session?.user.id);
+    console.log("entryRules", data);
+  
+    try {
+      await db.insert(entryRules).values(data);
       return { data: null, error: null };
     } catch (error) {
-      console.log("error from putEntryRule", error);
-      return { data: null, error: "Error" };
+      console.error("Error in putEntryRule:", error);
+      return { data: null, error: "An error occurred while inserting entry rules" };
     }
   };
 
-  export const putExitRule = async (ExitRules: ExitRule[]) => {
-    // console.log("exitRules", exitRules);
+
+//[{"ruleType":"exitRule","ruleAction":"long","indicatorId":"213","operator":"NA","value":0,"sequence":0,"logicalOperator":"NA","compareTo":"slope","compIndicatorId":0,"slope":"positiveOrZero","priceAction":"NA"},{"ruleType":"exitRule","ruleAction":"short","indicatorId":"220","operator":"=","value":0,"sequence":0,"logicalOperator":"NA","compareTo":"price","compIndicatorId":0,"slope":"NA","priceAction":"Close"}]
+  export const putExitRule = async (data: ExitRule[]) => {
     try {
-      await Promise.all(
-        ExitRules
-        .map(async (ExitRule: ExitRule) => {
-          await db.insert(exitRules).values(ExitRule);
-        })
-      );
+      const session = await getServerAuthSession();
+      console.log(session?.user.id)
+      console.log("exitRules", data);
+
+      await Promise.all( 
+      await db.insert(exitRules).values(data));
       return { data: null, error: null };
-    } catch (error) {
+      } catch (error) {
       console.log(error);
       return { data: null, error: "Error" };
     }
@@ -112,7 +135,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
 
   export const putStrategy = async (strategy: Strategy) => {
     try {
-      const data = await db.insert(strategies).values(strategy);
+      await db.insert(strategies).values(strategy);
       return { data: null, error: null };
     } catch (error) {
       console.log(error);
@@ -122,7 +145,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
 
   export const putRiskManagement = async (RiskManagement: RiskManagement) => {
     try {
-      const data = await db.insert(riskManagement).values(RiskManagement);
+      await db.insert(riskManagement).values(RiskManagement);
       return { data: null, error: null };
     } catch (error) {
       console.log(error);

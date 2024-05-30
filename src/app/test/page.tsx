@@ -7,31 +7,19 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { putEntryRule, putExitRule, putStrategy, putRiskManagement } from '@/server/db/queries';
+import { ExitRule, EntryRule} from '@/server/db/schema';
 
-interface Rule {
-  ruleType: string;
-  ruleAction: string;
-  indicatorId: number;
-  operator: string;
-  value: number;
-  sequence: number;
-  logicalOperator: string;
-  compareTo: string;
-  compIndicatorId: number;
-  slope: string;
-  priceAction: string;
-}
 
 
 
 function Page() {
-  const [entryRules, setEntryRules] = useState<Rule[]>([]);
-  const [exitRules, setExitRules] = useState<Rule[]>([]);
+  const [entryRules, setEntryRules] = useState<EntryRule[]>([]);
+  const [exitRules, setExitRules] = useState<ExitRule[]>([]);
   const [selectedData, setSelectedData] = useState({});
   const [numIndicators, setNumIndicators] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(true);
 
-  const handleSubmit = (submittedEntryRules: Rule[], submittedExitRules: Rule[]) => {
+  const handleSubmit = (submittedEntryRules: EntryRule[], submittedExitRules: ExitRule[]) => {
     setEntryRules(submittedEntryRules);
     setExitRules(submittedExitRules);
     // Perform further actions with the submitted rules, e.g., save to database
@@ -48,8 +36,8 @@ function Page() {
     try {
       // console.log("entryRules", JSON.stringify(entryRules));
       // console.log("exitRules", JSON.stringify(exitRules));
-      await putEntryRule(JSON.stringify(entryRules));
-      await putExitRule(JSON.stringify(exitRules));
+      await putEntryRule(entryRules);
+      await putExitRule(exitRules);
       // await putStrategy(strategy);
       // await putRiskManagement(riskManagement);
       // const response = await fetch('/api/saveData', {
@@ -65,7 +53,7 @@ function Page() {
       ) {
         console.log('Data sent to the database successfully');
       } else {
-        console.error('Error sending data to the database');
+        console.error('Error sending data to the database', Error);
       }
     } catch (error) {
       console.error('Error sending data to the database:', error);
@@ -112,7 +100,7 @@ function Page() {
   </div>
 
   <div className='flex items-center'>
-    <StrategyRules pageId={1} onSubmit={handleSubmit} indicatorData={selectedData}/>
+    <StrategyRules pageId={2} onSubmit={handleSubmit} indicatorData={selectedData}/>
   </div>
 
   <button onClick={sendDataToDatabase}>Send Data to Database</button>

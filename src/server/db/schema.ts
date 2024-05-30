@@ -162,7 +162,7 @@ export const exitRules = createTable("exit_rules", {
   logicalOperator: varchar("logical_operator", { length: 3 }), // "AND" or "OR"
   compareTo: varchar("compare_to", { length: 10 }), // e.g., "value", "slope", "price", "indicator"
   compIndicatorId: integer("comp_indicator_id").references(() => indicator.id), // id of the indicator to compare to
-  slope:varchar("slope", { length: 10 }), // e.g., "positive", "negative", "neutral"
+  slope:varchar("slope", { length: 25 }), // e.g., "positive", "negative", "neutral"
   priceAction: varchar("price_action", { length: 10 }), // e.g., "Close", "Open"
 });
 
@@ -179,7 +179,7 @@ export const entryRules = createTable("entry_rules", {
   logicalOperator: varchar("logical_operator", { length: 3 }), // "AND" or "OR"
   compareTo: varchar("compare_to", { length: 10 }), // e.g., "value", "slope", "price", "indicator"
   compIndicatorId: integer("comp_indicator_id").references(() => indicator.id), // id of the indicator to compare to
-  slope:varchar("slope", { length: 10 }), // e.g., "positive", "negative", "neutral"
+  slope:varchar("slope", { length: 25 }), // e.g., "positive", "negative", "neutral"
   priceAction: varchar("price_action", { length: 10 }), // e.g., "Close", "Open"
 });
 
@@ -194,7 +194,7 @@ export const riskManagement = createTable("risk_management", {
 
 
 export type Strategy = InferSelectModel<typeof strategies>;
-export type ExitRule = InferInsertModel<typeof exitRules>;
+export type ExitRule = InferInsertModel<typeof exitRules>[];
 export type EntryRule = InferInsertModel<typeof entryRules>[];
 export type RiskManagement = InferSelectModel<typeof riskManagement>;
 export type Indicator = InferSelectModel<typeof indicator>;
