@@ -17,21 +17,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ExitRule, EntryRule } from "@/server/db/schema";
+import type { ExitRule, EntryRule } from "@/server/db/schema";
 
-// interface Rule {
-//   ruleType: string;
-//   ruleAction: string;
-//   indicatorId: number;
-//   operator: string;
-//   value: number;
-//   sequence: number;
-//   logicalOperator: string;
-//   compareTo: string;
-//   compIndicatorId: number;
-//   slope: string;
-//   priceAction: string;
-// }
 
 interface StrategyRulesProps {
   onSubmit: (entryRules: EntryRule[], exitRules: ExitRule[]) => void;
@@ -51,8 +38,8 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
   const [exitRules, setExitRules] = useState<ExitRule[]>([
     
   ]);
-  // console.log("entryRules", entryRules);
-  // console.log("exitRules", exitRules);
+  console.log("entryRules", entry);
+  console.log("exitRules", exitRules);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,8 +62,8 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
 
   const handleExitRuleChange = (
     exitIndex: number,
-    field: keyof Rule,
-    value: number,
+    field: keyof ExitRule,
+    value: number | string,
   ) => {
     setExitRules((prevExitRules) => {
       const updatedExitRules = [...prevExitRules];
@@ -87,54 +74,53 @@ const StrategyRules: React.FC<StrategyRulesProps> = ({
     });
   };
 
-  const addEntryRule = () => {
-    console.log("addEntryRule", entry);
-    setEntryRules((prevEntryRules) => [
-      ...prevEntryRules,
-      {
-        ruleType: "entryRule",
-        ruleAction: "None",
-        indicatorId: 0,
-        operator: "NA",
-        value: 0,
-        sequence: 0,
-        logicalOperator: "NA",
-        compareTo: "NA",
-        compIndicatorId: 0,
-        slope: "NA",
-        priceAction: "NA",
-      },
-    ]);
-  };
-  
-  const addExitRule = () => {
-    console.log("addExitRule", exitRules);
-    setExitRules((prevExitRules) => [
-      ...prevExitRules,
-      {
-        ruleType: "exitRule",
-        ruleAction: "None",
-        indicatorId: 0,
-        operator: "NA",
-        value: 0,
-        sequence: 0,
-        logicalOperator: "NA",
-        compareTo: "NA",
-        compIndicatorId: 0,
-        slope: "NA",
-        priceAction: "NA",
-      },
-    ]);
-  };
-
   // const addEntryRule = () => {
-  //   console.log("addEntryRule", entryRules);
-  //   setEntryRules((prevEntryRules) => [...prevEntryRules, {} as Rule]);
+  //   // console.log("addEntryRule", entry);
+  //   setEntryRules((prevEntryRules) => [
+  //     ...prevEntryRules,
+  //     {
+  //       ruleType: "entryRule",
+  //       ruleAction: "None",
+  //       indicatorId: 0,
+  //       operator: "NA",
+  //       value: 0,
+  //       sequence: 0,
+  //       logicalOperator: "NA",
+  //       compareTo: "NA",
+  //       compIndicatorId: 0,
+  //       slope: "NA",
+  //       priceAction: "NA",
+  //     },
+  //   ]);
+  // };
+  
+  // const addExitRule = () => {
+  //   // console.log("addExitRule", exitRules);
+  //   setExitRules((prevExitRules) => [
+  //     ...prevExitRules,
+  //     {
+  //       ruleType: "exitRule",
+  //       ruleAction: "None",
+  //       indicatorId: 0,
+  //       operator: "NA",
+  //       value: 0,
+  //       sequence: 0,
+  //       logicalOperator: "NA",
+  //       compareTo: "NA",
+  //       compIndicatorId: 0,
+  //       slope: "NA",
+  //       priceAction: "NA",
+  //     },
+  //   ]);
   // };
 
-  // const addExitRule = () => {
-  //   setExitRules((prevExitRules) => [...prevExitRules, {} as Rule]);
-  // };
+  const addEntryRule = () => {
+    setEntryRules((prevEntryRules) => [...prevEntryRules, {} as EntryRule]);
+  };
+
+  const addExitRule = () => {
+    setExitRules((prevExitRules) => [...prevExitRules, {} as ExitRule]);
+  };
 
   const removeEntryRule = (EntryIndex: number) => {
     setEntryRules((prevRules) => {

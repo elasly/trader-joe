@@ -7,7 +7,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { putEntryRule, putExitRule, putStrategy, putRiskManagement } from '@/server/db/queries';
-import { ExitRule, EntryRule} from '@/server/db/schema';
+import type { ExitRule, EntryRule} from '@/server/db/schema';
 
 
 

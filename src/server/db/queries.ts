@@ -1,27 +1,12 @@
 //src/lib/queries.ts
 "use server";
 import  "server-only";
-import { entryRules, exitRules, indicator, strategies, riskManagement, EntryRule, ExitRule, Indicator, } from "@/server/db/schema";
+import { entryRules, exitRules, indicator, strategies, riskManagement,  } from "@/server/db/schema";
+import type { Strategy, RiskManagement, EntryRule, ExitRule, Indicator } from "@/server/db/schema";
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { getServerAuthSession } from "@/server/auth"; 
-import { Strategy, RiskManagement, ExitRules } from "@/lib/interfaces";
-import { z } from 'zod';
 
-
-// interface Rule {
-//   ruleType: string;
-//   ruleAction: string;
-//   indicatorId: number;
-//   operator: string;
-//   value: number;
-//   sequence: number;
-//   logicalOperator: string;
-//   compareTo: string;
-//   compIndicatorId: number;
-//   slope: string;
-//   priceAction: string;
-// }
 
 export const createIndicator = async (Indicator: Indicator) => {
   try {
