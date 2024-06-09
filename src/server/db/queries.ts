@@ -6,6 +6,7 @@ import type { Strategy, RiskManagement, EntryRule, ExitRule, Indicator } from "@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { getServerAuthSession } from "@/server/auth"; 
+import { map } from "zod";
 
 
 export const createIndicator = async (Indicator: Indicator) => {
@@ -127,6 +128,90 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
       return { data: null, error: "Error" };
     }
   };
+
+  export const getStrategy = async () => {
+    try {
+      const strategy = await db.select().from(strategies);
+      return { data: strategy, error: null };
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: "Error" };
+    }
+  };
+
+
+  interface Strategy {
+    id: number;
+    name: string;
+    description: string;
+  }
+  
+  // interface Rule {
+  //   id: number;
+  //   ruleType: string;
+  //   indicatorId: number;
+  //   operator: string;
+  //   value: number;
+  //   sequence: number;
+  //   logicalOperator: string;
+  //   compareTo: string;
+  //   compIndicatorId: number;
+  //   slope: string;
+  //   priceAction: string;
+  // }
+  
+  export interface StrategyRulesResponse {
+    strategy: Strategy;
+    entryRules: EntryRule[];
+    exitRules: ExitRule[];
+  }
+  
+  export type GetStrategyRulesResult =
+    | { data: StrategyRulesResponse; error: null }
+    | { data: null; error: string };
+  
+    export const getStrategyRules = async (strategyId: number) => {
+      try {
+        const strategy = await db
+          .select()
+          .from(strategies)
+          .where(eq(strategies.id, strategyId))
+          .limit(1)
+          .execute();
+    
+        if (strategy.length === 0) {
+          return { error: "Strategy not found" };
+        }
+    
+        const entryRuleData = await db
+          .select()
+          .from(entryRules)
+          .where(eq(entryRules.strategyId, strategyId))
+          .execute();
+    
+        const exitRuleData = await db
+          .select()
+          .from(exitRules)
+          .where(eq(exitRules.strategyId, strategyId))
+          .execute();
+    
+        const response: JSON[] = [
+          ...entryRuleData.map((rule) => ({
+            ...strategy[0],
+            ...rule,
+          })),
+          ...exitRuleData.map((rule) => ({
+            ...strategy[0],
+            ...rule,
+          })),
+        ];
+    
+        return { data: response, error: null };
+      } catch (error) {
+        console.error("Error in getStrategyRules:", error);
+        return { data: null, error: "An error occurred while fetching strategy rules" };
+      }
+    };
 
   export const putRiskManagement = async (RiskManagement: RiskManagement) => {
     try {
