@@ -6,7 +6,7 @@ import { DataTable } from "./data-table";
 import { getStrategyRules } from "@/server/db/queries";
 import type { GetStrategyRulesResult } from "@/server/db/queries";
 
-async function getData(): Promise<[JSON]> {
+async function getData(): Promise<JSON> {
   // const res = await fetch(
   //   "https://my.api.mockaroo.com/payment_info.json?key=f0933e60"
   // );
@@ -19,11 +19,11 @@ export default function TableExample() {
   const [stratData, setstratData] = useState<GetStrategyRulesResult[]>([]);
   useEffect(() => {
     const data = async () => {
-      setstratData(await getData());
+      const result = await getData();
       console.log(result);
-      // setstratData(result);
+      setstratData(result);
     };
     data();
   }, []);
-  return <DataTable columns={columns} data={result} />;
+  return <DataTable columns={columns} data={stratData} />;
 }
