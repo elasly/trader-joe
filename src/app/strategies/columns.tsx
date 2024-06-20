@@ -1,0 +1,4 @@
+type strategy = {
+
+    id: number
+}

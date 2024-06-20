@@ -85,6 +85,7 @@ function Page() {
           <DialogDescription>
             Please specify the number of indicators you want to generate.
           </DialogDescription>
+          
           <Input type="number" value={numIndicators} onChange={handleNumIndicatorsChange} />
           <DialogFooter>
             <DialogClose asChild>

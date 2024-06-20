@@ -58,31 +58,31 @@ export default async function Home() {
           </div>
         </div>
 
-        <CrudShowcase />
+        {/* <CrudShowcase /> */}
       </div>
     </main>
   );
 }
-async function CrudShowcase() {
-  const session = await getServerAuthSession();
-  if (!session?.user) return null;
+// async function CrudShowcase() {
+//   const session = await getServerAuthSession();
+//   if (!session?.user) return null;
 
-  const latestPost =   api.post.getLatest();
+//   const latestPost =   api.post.getLatest();
 
-  return (
+//   return (
     
     
 
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.title}</p>
+//     <div className="w-full max-w-xs">
+//       {latestPost ? (
+//         <p className="truncate">Your most recent post: {latestPost.title}</p>
         
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
+//       ) : (
+//         <p>You have no posts yet.</p>
+//       )}
 
-      <CreatePost />
-    </div>
+//       <CreatePost />
+//     </div>
 
-  );
-}
+//   );
+// }

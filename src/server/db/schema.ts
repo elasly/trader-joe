@@ -146,14 +146,15 @@ export const assetData = createTable("asset_data", {
 
 export const strategies = createTable("strategies", {
 	id: serial("id").primaryKey().notNull(),
-	name: varchar("name"),
-	description: varchar("description"),
+  userID: varchar("user_id").references(() => users.id).notNull(),
+	name: varchar("name").notNull(),
+	description: varchar("description").notNull(),
 });
 
 export const exitRules = createTable("exit_rules", {
 	id: serial("id").primaryKey().notNull(),
-	strategyId: integer("strategy_id").references(() => strategies.id),
-	ruleType: varchar("rule_type"), // e.g., "buy", "sell"
+	strategyId: integer("strategy_id").references(() => strategies.id).notNull(),
+	ruleType: varchar("rule_type").notNull(), // e.g., "buy", "sell"
 	indicatorId: integer("indicator_id").references(() => indicator.id),
 	// patternId: integer("pattern_id").references(() => patterns.id),
 	operator: varchar("operator", { length: 10 }), // e.g., "greater", "less", "crossAbove", "crossBelow"

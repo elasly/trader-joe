@@ -6,7 +6,6 @@ import type { Strategy, RiskManagement, EntryRule, ExitRule, Indicator } from "@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { getServerAuthSession } from "@/server/auth"; 
-import { map } from "zod";
 
 
 export const createIndicator = async (Indicator: Indicator) => {
@@ -139,26 +138,6 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
     }
   };
 
-
-  interface Strategy {
-    id: number;
-    name: string;
-    description: string;
-  }
-  
-  // interface Rule {
-  //   id: number;
-  //   ruleType: string;
-  //   indicatorId: number;
-  //   operator: string;
-  //   value: number;
-  //   sequence: number;
-  //   logicalOperator: string;
-  //   compareTo: string;
-  //   compIndicatorId: number;
-  //   slope: string;
-  //   priceAction: string;
-  // }
   
   export interface StrategyRulesResponse {
     strategy: Strategy;
@@ -167,7 +146,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
   }
   
   export type GetStrategyRulesResult =
-    | { data: StrategyRulesResponse; error: null }
+    { data: StrategyRulesType; error: null }
     | { data: null; error: string };
   
     export const getStrategyRules = async (strategyId: number) => {
@@ -195,7 +174,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
           .where(eq(exitRules.strategyId, strategyId))
           .execute();
     
-        const response: JSON[] = [
+        const response: StrategyRulesType[] = [
           ...entryRuleData.map((rule) => ({
             ...strategy[0],
             ...rule,
@@ -206,7 +185,7 @@ export const getindicatorDetails = async (selectedIndicator: string) => {
           })),
         ];
     
-        return { data: response, error: null };
+        return { data: response };
       } catch (error) {
         console.error("Error in getStrategyRules:", error);
         return { data: null, error: "An error occurred while fetching strategy rules" };
